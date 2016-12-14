@@ -6,7 +6,7 @@
 
 enum State { PENDING = 0, FULFILLED = 1, REJECTED = 2 }
 
-class MiniPromise {
+class MinimalPromise {
 
 	private state: State;
 	private value: any; //该promise解决后(resolve或reject)的结果值
@@ -16,7 +16,7 @@ class MiniPromise {
 		if ('function' !== typeof fn) {
 			throw new TypeError('Supplied parameter should be callable.');
 		}
-		//不允许多次初始化（比如使用MiniPromise.call(promise, function(){})）
+		//不允许多次初始化（比如使用MinimalPromise.call(promise, function(){})）
 		if (undefined !== this.state) {
 			throw new TypeError('Cant\'t reconstruct a exist promise.');
 		}
@@ -34,7 +34,7 @@ class MiniPromise {
 				if (done) { return ; }
 				done = true;
 				// this.resolve(result);
-				MiniPromise.nextTick(() => this.resolve(result)); //放到下一个事件循环中执行（此举在于支持promise被立即解决后，在当前代码段(当前事件循环)中，还可在后面继续添加then操作）
+				MinimalPromise.nextTick(() => this.resolve(result)); //放到下一个事件循环中执行（此举在于支持promise被立即解决后，在当前代码段(当前事件循环)中，还可在后面继续添加then操作）
 			}, (error) => { //任务fn主动reject，则立即reject
 				if (done) { return ; }
 				done = true;
@@ -48,7 +48,7 @@ class MiniPromise {
 
 	//尝试使用一个结果值来完成此promise，若结果值是promise，则会等待其完成后解决此promise
 	private resolve(result) {
-		if (MiniPromise.isThenable(result)) { //若得到的结果是一个promise(相当于当前promise的孩子)，那么需要等待此promise完成
+		if (MinimalPromise.isThenable(result)) { //若得到的结果是一个promise(相当于当前promise的孩子)，那么需要等待此promise完成
 			result.then(this.fulfill.bind(this), this.reject.bind(this));
 		} else { //若是最终结果值，则直接解决
 			this.fulfill(result);
@@ -61,7 +61,7 @@ class MiniPromise {
 	 * @param {boolean} fulfilled 是否标记为fulfilled状态，否则为rejected
 	 * @param {*} value 成功完成后的结果值或失败后的错误值
 	 * 
-	 * @memberOf MiniPromise
+	 * @memberOf MinimalPromise
 	 */
 	complete(fulfilled: boolean, value: any) {
 		this.state = fulfilled ? State.FULFILLED : State.REJECTED;
@@ -79,7 +79,7 @@ class MiniPromise {
 
 	//添加一个结果回调（同其他库的done）
 	addHandler(onFulfilled?: Function, onRejected?: Function) {
-		MiniPromise.nextTick(() => { //此举在于race中，先定义的promise先被解决（有点仅在于满足测试的意味了:(）
+		MinimalPromise.nextTick(() => { //此举在于race中，先定义的promise先被解决（有点仅在于满足测试的意味了:(）
 			if (this.state === State.PENDING) {
 				this.handlers.push(onFulfilled, onRejected);
 			} else if (this.state === State.FULFILLED) { //若当前promise已解决，那么不需要再添加到handlers属性中了（即使添加了也不会被执行），此举主要用于执行那些 在promise已完成后才被添加的handler函数（比如下方：TEST-2同步方式时会导致handler没有执行）
@@ -92,8 +92,8 @@ class MiniPromise {
 
 	//then方法的目的在于返回一个新的promise，该promise的任务函数的作用在于监听当前promise的完成事件，当前promise完成后，会继续去完成新promise
 	then(onFulfilled?: Function, onRejected?: Function) {
-		MiniPromise.checkBadInstance(this);
-		return new MiniPromise((resolve, reject) => {
+		MinimalPromise.checkBadInstance(this);
+		return new MinimalPromise((resolve, reject) => {
 			//监听当前promise的成功和失败事件
 			this.addHandler((result) => {
 				if ('function' === typeof onFulfilled) {
@@ -185,7 +185,7 @@ class MiniPromise {
 		this.checkBadClass(this);
 		if (!this.isIterable(iterable)) { return this.reject(new TypeError('Supplied parameter should be iterable.')); }
 		// if (!iterable.length) { return this.resolve(); } //若是空数组，则后面直接返回的是pending的promise
-		return new MiniPromise((resolve, reject) => {
+		return new MinimalPromise((resolve, reject) => {
 			for (let value of iterable) {
 				this.resolve(value).then(resolve, reject);
 			}
@@ -194,10 +194,10 @@ class MiniPromise {
 
 	//若非标准constructor或instance，则报错
 	static checkBadClass(cls) {
-		if (cls !== MiniPromise) { throw new TypeError('Bad promise constructor.'); }
+		if (cls !== MinimalPromise) { throw new TypeError('Bad promise constructor.'); }
 	}
 	static checkBadInstance(inst) {
-		if (inst.constructor !== MiniPromise) { throw new TypeError('Bad promise instance.'); }
+		if (inst.constructor !== MinimalPromise) { throw new TypeError('Bad promise instance.'); }
 	}
 
 	//是否是可遍历的对象（用于all()）
@@ -217,5 +217,5 @@ class MiniPromise {
 
 }
 
-export default MiniPromise;
-export { MiniPromise as Promise };
+export default MinimalPromise;
+export { MinimalPromise as Promise };

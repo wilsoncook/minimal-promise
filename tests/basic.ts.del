@@ -2,7 +2,7 @@
 // const assert = require('assert');
 import * as chai from 'chai';
 const assert = chai.assert;
-import { default as Promise } from '../mini-promise';
+import { default as Promise } from '../minimal-promise';
 
 function unexpectedResolve(done) {
     return function () {
@@ -232,7 +232,7 @@ describe('basic', function() {
 	// });
 
 	// it('[asynchronous]should result as "OK"', function(done) {
-	// 	new MiniPromise(function(resolve, reject) {
+	// 	new MinimalPromise(function(resolve, reject) {
 	// 		setTimeout(() => resolve('OK'), 1000);
 	// 	}).addHandler(function(result) {
 	// 		assert.equal(result, 'OK');

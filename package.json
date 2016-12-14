@@ -1,13 +1,14 @@
 {
-  "name": "mini-promise",
+  "version": "1.0.0",
+  "name": "minimal-promise",
   "author": {
     "name": "Wilson Zeng",
     "email": "jackzcs@gmail.com"
   },
-  "main": "dist/mini-promise.js",
+  "main": "dist/minimal-promise.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:wilsoncook/mini-promise.git"
+    "url": "git@github.com:wilsoncook/minimal-promise.git"
   },
   "description": "A minimalist promise that follows the behaves of es6 promise class. (It's mainly used for demonstrations or personal learning)",
   "keywords": [
@@ -21,9 +22,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/wilsoncook/mini-promise/issues"
+    "url": "https://github.com/wilsoncook/minimal-promise/issues"
   },
-  "homepage": "https://github.com/wilsoncook/mini-promise",
+  "homepage": "https://github.com/wilsoncook/minimal-promise",
   "devDependencies": {
     "chai": "^3.5.0",
     "gulp": "^3.9.1",

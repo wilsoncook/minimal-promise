@@ -12,7 +12,7 @@ gulp.task('clean-build', function() {
 });
 
 //tranlate all *.ts into *.js under dist
-gulp.task('build', function() {
+gulp.task('build', ['clean-build'], function() {
 	return tsProject.src()
 		.pipe(tsProject())
 		.js.pipe(gulp.dest('dist'));
@@ -26,15 +26,15 @@ gulp.task('build', function() {
 // });
 
 gulp.task('test-es6', ['build'], function(done) {
-	var MiniPromise = require('./dist/mini-promise').default, assert = require('assert');
-	MiniPromise.defineGlobalPromise = function() {
-		global.Promise = MiniPromise;
+	var MinimalPromise = require('./dist/minimal-promise').default, assert = require('assert');
+	MinimalPromise.defineGlobalPromise = function() {
+		global.Promise = MinimalPromise;
 		global.assert = assert;
 	};
-	MiniPromise.removeGlobalPromise = function() {
+	MinimalPromise.removeGlobalPromise = function() {
 		delete global.Promise;
 	};
-	testES6(MiniPromise, function(err) {
+	testES6(MinimalPromise, function(err) {
 		if (err) { return done(err); }
 		done();
 	});
