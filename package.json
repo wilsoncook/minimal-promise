@@ -1,0 +1,36 @@
+{
+  "name": "mini-promise",
+  "author": {
+    "name": "Wilson Zeng",
+    "email": "jackzcs@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:wilsoncook/mini-promise.git"
+  },
+  "description": "A minimalist promise that follows the behaves of es6 promise class. (It's mainly used for demonstrations or personal learning)",
+  "keywords": [
+    "promise",
+    "es6",
+    "simple promise",
+    "typescript"
+  ],
+  "scripts": {
+    "test": "./node_modules/.bin/gulp test-es6"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wilsoncook/mini-promise/issues"
+  },
+  "homepage": "https://github.com/wilsoncook/mini-promise",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-mocha": "^3.0.1",
+    "gulp-typescript": "^3.1.3",
+    "mocha": "^3.2.0",
+    "promises-es6-tests": "^0.5.0",
+    "typescript": "^2.0.10"
+  }
+}

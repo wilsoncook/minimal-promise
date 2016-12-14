@@ -1,0 +1,243 @@
+
+// const assert = require('assert');
+import * as chai from 'chai';
+const assert = chai.assert;
+import { default as Promise } from '../mini-promise';
+
+function unexpectedResolve(done) {
+    return function () {
+		console.log('----done called');
+        done("Error: promise was expected to not resolve, but did.");
+    };
+}
+
+describe('basic', function() {
+
+	// it("should reject immediately", function (done) {
+    //     var obj = {};
+
+    //     var p1 = new Promise(function (resolve, reject) {
+	// 		// console.log('-----rejected');
+    //         reject(obj);
+    //     });
+
+    //     Promise.all([p1])
+    //         .then(unexpectedResolve(done), function (rejected) {
+    //             assert.equal(obj, rejected);
+    //         }).then(done).catch(done);
+
+	// 	// new Promise(function(resolve, reject) {
+	// 	// 	// resolve('OK');
+	// 	// 	reject(new Error('EEEE'));
+	// 	// })
+	// 	// .then(function(result) { console.log('---then 1', result); })
+	// 	// .then(function(result) { console.log('---then 2', result); })
+	// 	// .catch(function(error) { console.log('--catch', error); })
+	// 	// .then(function() { console.log('---then done'); done(); })
+
+    // });
+
+	// it("should immediately reject for non-iterable argument", function (done) {
+    //     var nonIterable = 3;
+
+    //     // non-Object fails CheckIterable per 7.4.1
+    //     // GetIterator throws TypeError per 7.4.2
+
+    //     Promise.all(nonIterable)
+    //         .then(unexpectedResolve(done))
+    //         .catch(function (err) {
+    //             assert.ok(err instanceof TypeError);
+    //         }).then(done).catch(done);
+    // });
+
+	// it("throws if 'this' is not a Promise constructor", function () {
+    //     // requires the 'this' value to be a constructor function that suppports the
+    //     // parameter conventions of the Promise constructor
+    //     var empty = {};
+
+    //     assert.throws(function () {
+    //         Promise.all.call(empty, []);
+    //     }, TypeError);
+    //     // spec says to throw TypeError, per 25.4.1.6 NewPromiseCapability
+    // });
+
+	// it("should return a resolved promise whose result is empty array", function (done) {
+    //     var p = Promise.all([]);
+
+    //     assert.ok(p instanceof Promise);
+
+    //     p.then(function (result) {
+	// 		// console.log('-----fffff', result);
+    //         assert.deepEqual([], result);
+    //     }).then(done).catch(done);
+
+	// 	// var defer = Promise.defer();
+	// 	// defer.promise.then((result) => {
+	// 	// 	console.log('----result', result);
+	// 	// 	done();
+	// 	// });
+	// 	// setTimeout(() => defer.resolve(123), 1000);
+    // });
+
+	// it("should not resolve immediately when one of a two-promise array resolves", function (done) {
+    //     var p1 = new Promise(function (resolve) {
+    //             resolve(1);
+    //         }),
+    //         p2 = new Promise(function (resolve) {
+    //             resolve(2);
+    //         });
+
+    //     var sequencer = [1];
+
+    //     p1.then(function (resolved) {
+	// 		console.log('-------#2');
+    //         assert.deepEqual([1], sequencer);
+    //         sequencer.push(2);
+    //     }).catch(done);
+
+    //     Promise.all([p1, p2]).then(function (resolved) {
+	// 		console.log('-------#4');
+    //         assert.deepEqual([1, 2, 3], sequencer);
+    //         sequencer.push(4);
+    //     }).then(done).catch(done);
+
+    //     p2.then(function (resolved) {
+	// 		console.log('-------#3');
+    //         assert.deepEqual([1, 2], sequencer);
+    //         sequencer.push(3);
+    //     }).catch(done);
+
+    // });
+
+	// it("throws TypeError if 'this' is a constructed, but unresolved Promise", function (done) {
+    //     var resolveP,
+    //         p = new Promise(function (resolve, reject) {
+    //             resolveP = resolve;
+    //         });
+
+    //     // promise's [[PromiseState]] internal slot should be 'pending'
+    //     // should throw
+    //     assert.throws(function () {
+    //         Promise.call(p, function (resolve, reject) {
+    //             resolve(2);
+    //         });
+    //     }, TypeError);
+
+    //     // receive first resolution
+    //     p.then(function (resolved) {
+    //         assert.equal(1, resolved);
+    //     }).then(done).catch(done);
+
+    //     resolveP(1);
+    // });
+
+	// it("throws TypeError if 'this' is a resolved Promise", function (done) {
+    //     var p = new Promise(function (resolve, reject) {
+    //         resolve(1);
+    //     });
+
+    //     function afterFirstResolution() {
+    //         // if promise's [[PromiseState]] internal slot is not 'undefined'
+    //         // should throw
+    //         assert.throws(function () {
+    //             Promise.call(p, function (resolve, reject) {
+    //                 resolve(2);
+    //             });
+    //         }, TypeError);
+
+    //         // affirm that previous resolution is still settled
+    //         p.then(function (resolved) {
+    //             assert.equal(1, resolved);
+    //         }).then(done).catch(done);
+    //     }
+
+    //     // receive first resolution
+    //     p.then(function (resolved) {
+    //         assert.equal(resolved, 1);
+
+    //         Promise.resolve().then(afterFirstResolution).catch(done);
+    //     }).catch(done);
+    // });
+
+	class BadResolverPromise extends Promise {
+		constructor(executor) {
+			super(executor);
+			var p = new Promise(executor);
+			executor(3, function () {});
+
+			this.then = p.then;
+			this.constructor = BadResolverPromise;
+		}
+	}
+	BadResolverPromise.prototype = Promise.prototype;
+	BadResolverPromise.all = Promise.all;
+	BadResolverPromise.race = Promise.race;
+	BadResolverPromise.reject = Promise.reject;
+	BadResolverPromise.resolve = Promise.resolve;
+
+	it("throws TypeError with Promise.then", function (done) {
+		assert.throws(function () {
+			new BadResolverPromise(function () {}).then(function () {});
+		}, TypeError);
+
+		done();
+	});
+
+	it("should return a pending promise", function (done) {
+        var p1 = Promise.race([]);
+
+        p1.then(function () {
+            throw new Error("expected Promise.race([]) to remain unsettled");
+        })
+            .catch(done);
+
+        var p2 = Promise.resolve().then(done).catch(done);
+    });
+
+	it("should fulfill immediately with first fulfilled promise in array", function (done) {
+        var resolveP1, rejectP2,
+            p1 = new Promise(function (resolve, reject) {
+				console.log('----p1');
+                resolveP1 = resolve;
+            }),
+            p2 = new Promise(function (resolve, reject) {
+				console.log('----p2');
+                rejectP2 = reject;
+            });
+
+        rejectP2(2);
+        resolveP1(1);
+
+        Promise.race([p1, p2]).then(function (resolved) {
+			console.log('----resolved', resolved);
+            assert.equal(resolved, 1);
+        }).then(done).catch(done);
+    });
+
+	// it('test', function(done) {
+	// 	let t = new Promise(function(resolve, reject) {
+	// 		setTimeout(() => resolve('ok'), 1000);
+	// 	});
+	// 	t.addHandler(function(result) {
+	// 		console.log('-----throwed');
+	// 		setTimeout(() => {
+	// 			throw new Error('----test');
+	// 		}, 1000);
+	// 	});
+	// 	t.then(function(result) {
+	// 		console.log('----result', result);
+	// 	}).catch(function(err) {
+	// 		console.log('---catch', err);
+	// 	});
+	// });
+
+	// it('[asynchronous]should result as "OK"', function(done) {
+	// 	new MiniPromise(function(resolve, reject) {
+	// 		setTimeout(() => resolve('OK'), 1000);
+	// 	}).addHandler(function(result) {
+	// 		assert.equal(result, 'OK');
+	// 		done();
+	// 	}, function() {});
+	// });
+
+});

@@ -1,0 +1,12 @@
+{
+  "globalDevDependencies": {
+    "chai": "registry:dt/chai#3.4.0+20160601211834",
+    "gulp": "registry:dt/gulp#3.8.0+20160907112908",
+    "gulp-mocha": "registry:dt/gulp-mocha#0.0.0+20160316155526",
+    "mocha": "registry:dt/mocha#2.2.5+20161028141524",
+    "node": "registry:dt/node#6.0.0+20161121110008",
+    "orchestrator": "registry:dt/orchestrator#0.0.0+20160316155526",
+    "q": "registry:dt/q#0.0.0+20161004185634",
+    "vinyl": "registry:dt/vinyl#1.2.0+20160924121322"
+  }
+}
