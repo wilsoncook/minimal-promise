@@ -1,13 +1,13 @@
 language: node_js
 
 node_js:
-	- "6"
-	- "4"
-	- "0.12.x"
+ - "6"
+ - "4"
+ - "0.12.2"
 
 branches:
-	only:
-	- master
+ only:
+ - master
 
 # before_script:
 # 	- npm install -g mocha gulp
