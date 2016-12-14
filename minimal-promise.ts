@@ -209,13 +209,19 @@ class MinimalPromise {
 	}
 
 	//在下一个event loop中执行某函数
-	static nextTick(fn) {
-		//node环境
-		process.nextTick(fn);
-		//other TODO
-	}
+	static nextTick;
 
 }
+
+//简单的环境兼容
+if ('undefined' !== typeof process && process && 'function' === typeof process.nextTick) {
+	MinimalPromise.nextTick = function(fn) {
+		process.nextTick(fn);
+	};
+} else {
+	MinimalPromise.nextTick = setTimeout;
+}
+
 
 export default MinimalPromise;
 export { MinimalPromise as Promise };
