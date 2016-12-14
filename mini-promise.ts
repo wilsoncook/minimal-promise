@@ -218,3 +218,4 @@ class MiniPromise {
 }
 
 export default MiniPromise;
+export { MiniPromise as Promise };

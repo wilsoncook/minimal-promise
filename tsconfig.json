@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
 		"target": "es3",
-		"module": "commonjs"
+		"module": "umd"
 	}
 }

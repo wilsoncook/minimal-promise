@@ -4,6 +4,7 @@
     "name": "Wilson Zeng",
     "email": "jackzcs@gmail.com"
   },
+  "main": "dist/mini-promise.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:wilsoncook/mini-promise.git"

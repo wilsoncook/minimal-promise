@@ -39,3 +39,5 @@ gulp.task('test-es6', ['build'], function(done) {
 		done();
 	});
 });
+
+gulp.task('default', ['build']);
