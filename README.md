@@ -1,4 +1,4 @@
-# MinimalPromise[![Build Status](https://travis-ci.org/wilsoncook/mini-promise.svg?branch=master)](https://travis-ci.org/wilsoncook/mini-promise)
+# MinimalPromise [![Build Status](https://travis-ci.org/wilsoncook/minimal-promise.svg?branch=master)](https://travis-ci.org/wilsoncook/minimal-promise)
 A minimalist promise that follows the behaves of ES6 Promise specifications.   
 Testing under [promises-es6-tests](https://github.com/promises-es6/promises-es6) cases.  
 (It is recommended to used as demonstrations or personal learning)  
